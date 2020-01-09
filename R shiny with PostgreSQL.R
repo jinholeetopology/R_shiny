@@ -9,8 +9,8 @@ library(DT)
 library(RPostgreSQL)
 
 user_base <- data.frame(
-  user = c("user1", "user2"),     # ·Î±×ÀÎ ID
-  password = c("pass1", "pass2"), # ·Î±×ÀÎ password
+  user = c("user1", "user2"),     # ë¡œê·¸ì¸ ID
+  password = c("pass1", "pass2"), # ë¡œê·¸ì¸ password
   id = c('0000','1234'),
   permissions = c("admin", "standard"),
   name = c("Lee", "Kim"),
@@ -19,7 +19,7 @@ user_base <- data.frame(
   row.names = NULL
 )
 
-# PostgreSQL Á¢¼Ó : docker ÀÇ demo_db1 ¶ó´Â DB ¿¡ demo_t ¶ó´Â table À» ¸¸µé¾î ³õ¾ÒÀ½
+# PostgreSQL ì ‘ì† : docker ì˜ demo_db1 ë¼ëŠ” DB ì— demo_t ë¼ëŠ” table ì„ ë§Œë“¤ì–´ ë†“ì•˜ìŒ
 
 global_con <- dbConnect(dbDriver("PostgreSQL"), dbname = "demo_db1", host = "localhost", port = 5555, user = "postgres", password = "password1")
 global_sql_query <- "select * from demo_t;"
@@ -137,7 +137,7 @@ ui <- dashboardPage(
                 block = TRUE
               ),
               
-              h2(""), # actionbutton ¹Ø¿¡ ºóÄ­À» ³Ö´Â ¹æ¹ý
+              h2(""), # actionbutton ë°‘ì— ë¹ˆì¹¸ì„ ë„£ëŠ” ë°©ë²•
               
               DT::dataTableOutput("filteredTable2"),
               DT::dataTableOutput("filteredTableSelected2"),
@@ -159,7 +159,7 @@ ui <- dashboardPage(
 )
 
 
-# SERVER ½ÃÀÛ
+# SERVER ì‹œìž‘
 
 server <- function(input, output, session) {
   
@@ -202,7 +202,7 @@ server <- function(input, output, session) {
     )
   })
   
-  # action button À» ´©¸£¸é DB ¿¡ ÇÑ ÁÙ ½×´Â Äõ¸®
+  # action button ì„ ëˆ„ë¥´ë©´ DB ì— í•œ ì¤„ ìŒ“ëŠ” ì¿¼ë¦¬
   
   saveData <- function(data) {
     
@@ -210,9 +210,9 @@ server <- function(input, output, session) {
     user_data <- reactive({credentials()$info})
     req(credentials()$user_auth) 
     
-    # PostgreSQL ¿¡ insert ¸¦ ³¯·Áº¸ÀÚ.
-    # R shiny ¿¡¼­ input À¸·Î ¹ÞÀº º¯¼ö´Â %s ·Î ¹ÞÀº ÀÌÈÄ¿¡ 'input$º¯¼ö¸í' À¸·Î insert °¡ °¡´ÉÇÏ´Ù
-    # insert ¹® ³»ºÎ¿¡ ÀÖ´Â current_date ´Â R ÀÌ ¾Æ´Ñ, PostgreSQL ³»ºÎÀÇ ÇÔ¼öÀÌ´Ù.
+    # PostgreSQL ì— insert ë¥¼ ë‚ ë ¤ë³´ìž.
+    # R shiny ì—ì„œ input ìœ¼ë¡œ ë°›ì€ ë³€ìˆ˜ëŠ” %s ë¡œ ë°›ì€ ì´í›„ì— 'input$ë³€ìˆ˜ëª…' ìœ¼ë¡œ insert ê°€ ê°€ëŠ¥í•˜ë‹¤
+    # insert ë¬¸ ë‚´ë¶€ì— ìžˆëŠ” current_date ëŠ” R ì´ ì•„ë‹Œ, PostgreSQL ë‚´ë¶€ì˜ í•¨ìˆ˜ì´ë‹¤.
     
     dbSendQuery(con, 
                 sprintf("insert into demo_t (c1, c2, c3, c4) values (current_date,'%s','%s', 1)",
@@ -221,13 +221,13 @@ server <- function(input, output, session) {
     dbDisconnect(con)
   }
   
-  # action button À» ´©¸£¸é DB ¿¡ ÇÑ ÁÙ ½×±â
+  # action button ì„ ëˆ„ë¥´ë©´ DB ì— í•œ ì¤„ ìŒ“ê¸°
   
   observeEvent(input$submit, {
     saveData(formData())
   })
   
-  # action butoon À» ´©¸£¸é ÆË¾÷Ã¢ ¶ß°Ô ÇÏ±â
+  # action butoon ì„ ëˆ„ë¥´ë©´ íŒì—…ì°½ ëœ¨ê²Œ í•˜ê¸°
   
   observeEvent(input$submit, {
     showModal(modalDialog(
@@ -237,11 +237,11 @@ server <- function(input, output, session) {
     ))
   })
   
-  # ¿©±âºÎÅÍ tab2 ½ÃÀÛ
+  # ì—¬ê¸°ë¶€í„° tab2 ì‹œìž‘
   
   loadData <- function() {
     
-    input$submit_list_update # ÀÌ°É ³Ö¾î¼­ ½Ç½Ã°£ ¾÷µ¥ÀÌÆ®°¡ °¡´É
+    input$submit_list_update # ì´ê±¸ ë„£ì–´ì„œ ì‹¤ì‹œê°„ ì—…ë°ì´íŠ¸ê°€ ê°€ëŠ¥
     
     con  <- dbConnect(dbDriver("PostgreSQL"), dbname = "demo_db1", host = "localhost", port = 5555, user = "postgres", password = "password1")
     query <- "select * from demo_t ;"
@@ -278,13 +278,13 @@ server <- function(input, output, session) {
   output$filteredTableSelected <- DT::renderDataTable({
     req(credentials()$user_auth)
     datatable(
-      filteredTable_selected(), # filteredTable_selected()[,2:5] ÀÌ·¸°Ô ÇÏ¸é 2~5 ÄÃ·³¸¸ ¼±ÅÃµÊ
+      filteredTable_selected(), # filteredTable_selected()[,2:5] ì´ë ‡ê²Œ í•˜ë©´ 2~5 ì»¬ëŸ¼ë§Œ ì„ íƒë¨
       selection = list(mode = "none"),
       options = list(scrollX = TRUE)
     )
   })
   
-  # R ¿¡¼­ data.frame À» DB ¿¡ ½×´Â ¹æ¹ý : https://stackoverflow.com/questions/33634713/rpostgresql-import-dataframe-into-a-table
+  # R ì—ì„œ data.frame ì„ DB ì— ìŒ“ëŠ” ë°©ë²• : https://stackoverflow.com/questions/33634713/rpostgresql-import-dataframe-into-a-table
   
   saveData_ <- function(data) {
     
@@ -304,7 +304,7 @@ server <- function(input, output, session) {
     saveData_(formData())
   })
   
-  # action butoon À» ´©¸£¸é ÆË¾÷Ã¢ ¶ß°Ô ÇÏ±â
+  # action butoon ì„ ëˆ„ë¥´ë©´ íŒì—…ì°½ ëœ¨ê²Œ í•˜ê¸°
   
   observeEvent(input$submit_save_data, {
     showModal(modalDialog(
@@ -315,10 +315,10 @@ server <- function(input, output, session) {
     
   })
   
-  # ¿©±âºÎÅÍ tab3 ½ÃÀÛ
+  # ì—¬ê¸°ë¶€í„° tab3 ì‹œìž‘
   
   loadData2 <- function() {
-    input$submit_list_update2 # ÀÌ°É ³Ö¾î¼­ ½Ç½Ã°£ ¾÷µ¥ÀÌÆ®°¡ °¡´É
+    input$submit_list_update2 # ì´ê±¸ ë„£ì–´ì„œ ì‹¤ì‹œê°„ ì—…ë°ì´íŠ¸ê°€ ê°€ëŠ¥
     con  <- dbConnect(dbDriver("PostgreSQL"), dbname = "demo_db1", host = "localhost", port = 5555, user = "postgres", password = "password1")
     query <- "select * from demo_t ;"
     data  <- dbGetQuery(con, query)
@@ -354,7 +354,7 @@ server <- function(input, output, session) {
   output$filteredTableSelected2 <- DT::renderDataTable({
     req(credentials()$user_auth)
     datatable(
-      filteredTable_selected2(), # filteredTable_selected_revise()[,2:5] ÀÌ·¸°Ô ÇÏ¸é 2~5 ÄÃ·³¸¸ ¼±ÅÃµÊ
+      filteredTable_selected2(), # filteredTable_selected_revise()[,2:5] ì´ë ‡ê²Œ í•˜ë©´ 2~5 ì»¬ëŸ¼ë§Œ ì„ íƒë¨
       selection = list(mode = "none"),
       #caption = "bbbbb",
       options = list(scrollX = TRUE)
@@ -367,10 +367,10 @@ server <- function(input, output, session) {
     
     req(credentials()$user_auth) 
     
-    # »óÅÂ¸¦ º¯°æ½ÃÅ³¶§ ¸¶´Ù num À» 1¾¿ ´Ã¸®ÀÚ
+    # ìƒíƒœë¥¼ ë³€ê²½ì‹œí‚¬ë•Œ ë§ˆë‹¤ num ì„ 1ì”© ëŠ˜ë¦¬ìž
     num_temp = filteredTable_selected2()[4] + 1
     
-    # dataframe À¸·Î ¸¸µé¾î¼­ cbind ·Î ³ªÁß¿¡ ÇÕÄ¥ ¿¹ÂÄ
+    # dataframe ìœ¼ë¡œ ë§Œë“¤ì–´ì„œ cbind ë¡œ ë‚˜ì¤‘ì— í•©ì¹  ì˜ˆì©¡
     temp <- data.frame(
       num = num_temp,
       stringsAsFactors = FALSE
@@ -387,7 +387,7 @@ server <- function(input, output, session) {
     saveData_2(formData())
   })
   
-  # action butoon À» ´©¸£¸é ÆË¾÷Ã¢ ¶ß°Ô ÇÏ±â
+  # action butoon ì„ ëˆ„ë¥´ë©´ íŒì—…ì°½ ëœ¨ê²Œ í•˜ê¸°
   
   observeEvent(input$submit_save_data2, {
     showModal(modalDialog(
@@ -397,12 +397,12 @@ server <- function(input, output, session) {
     ))
   })
   
-  # ¾Æ·¡ÀÇ Á¶°Çµé(if Àý)À» ¸¸Á·½ÃÅ°Áö ¾ÊÀ¸¸é submit ¹öÆ° ºñÈ°¼ºÈ­µÇ°Ô ÇÏ±â
-  # PostgreSQL ¿¡¼­ c2, c3 ÀÇ ±æÀÌ¸¦ 10 ÀÌÇÏ·Î Á¦ÇÑÇØ¼­, 11 ÀÌ»óÀ¸·Î ÀÔ·ÂÀ»ÇÏ°í save ¸¦ ÇÏ¸é PostgreSQL ¿À·ù°¡ ³ª¹Ç·Î R shiny °¡ ¿À·ù°¡ ³ª¼­ ²¨Áø´Ù.
-  # ÀÌ°ÍÀ» ´ëºñÇØ¼­ ±æÀÌ´Â 1 ÀÌ»ó 10 ÀÌÇÏÀÎ °æ¿ì¸¸ ÀÔ·Â °¡´ÉÇÏ°Ô action button À» Á¦ÇÑÇÏÀÚ.
+  # ì•„ëž˜ì˜ ì¡°ê±´ë“¤(if ì ˆ)ì„ ë§Œì¡±ì‹œí‚¤ì§€ ì•Šìœ¼ë©´ submit ë²„íŠ¼ ë¹„í™œì„±í™”ë˜ê²Œ í•˜ê¸°
+  # PostgreSQL ì—ì„œ c2, c3 ì˜ ê¸¸ì´ë¥¼ 10 ì´í•˜ë¡œ ì œí•œí•´ì„œ, 11 ì´ìƒìœ¼ë¡œ ìž…ë ¥ì„í•˜ê³  save ë¥¼ í•˜ë©´ PostgreSQL ì˜¤ë¥˜ê°€ ë‚˜ë¯€ë¡œ R shiny ê°€ ì˜¤ë¥˜ê°€ ë‚˜ì„œ êº¼ì§„ë‹¤.
+  # ì´ê²ƒì„ ëŒ€ë¹„í•´ì„œ ê¸¸ì´ëŠ” 1 ì´ìƒ 10 ì´í•˜ì¸ ê²½ìš°ë§Œ ìž…ë ¥ ê°€ëŠ¥í•˜ê²Œ action button ì„ ì œí•œí•˜ìž.
   
   observe({
-    # ·Î±×¾Æ¿ôÇÏ¸é ÀÇ·Ú¹öÆ° ¶ßÁö ¾Ê°Ô ÇÏ°Ô(logout)
+    # ë¡œê·¸ì•„ì›ƒí•˜ë©´ ì˜ë¢°ë²„íŠ¼ ëœ¨ì§€ ì•Šê²Œ í•˜ê²Œ(logout)
     req(credentials()$user_auth)
     
     shinyjs::hide("submit")
@@ -411,7 +411,7 @@ server <- function(input, output, session) {
       shinyjs::show("submit")
   })
   
-  # ¿©±âºÎÅÍ actionButton ¿¡ Á¶°Ç ºÙÀÌ±â
+  # ì—¬ê¸°ë¶€í„° actionButton ì— ì¡°ê±´ ë¶™ì´ê¸°
   
   output$value <- renderText({
     validate(
@@ -421,7 +421,7 @@ server <- function(input, output, session) {
   })
 }
 
-# ¿¬°áµÈ ¸ðµç db connection ¸ðµÎ disconnection ÇÏ´Â ¹æ¹ý
+# ì—°ê²°ëœ ëª¨ë“  db connection ëª¨ë‘ disconnection í•˜ëŠ” ë°©ë²•
 drv <- dbDriver("PostgreSQL")
 
 cons <- dbListConnections(drv)
