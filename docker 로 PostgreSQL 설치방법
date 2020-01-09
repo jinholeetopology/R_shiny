@@ -1,0 +1,38 @@
+
+1 port 를 5555 로 바꿔서 추가해 보기
+  - PostgreSQL 의 docker port 는 5432 인데 5555 로 변경
+
+docker run -d -p 5555:5432 -v postgres-data:/var/lib/postgresql/data --name demo postgres
+
+2 docker 실행
+
+docker exec -it demo psql -U postgres
+
+3. database 생성
+
+CREATE DATABASE demo_db;
+
+4. 생성한 database 인 demo_db 으로 이동
+
+\c demo_db
+
+5. table "demo_t" 를 만들자
+
+CREATE TABLE demo_t(something int);
+
+6. table "demo_t" 에 something 이라는 컬럼을 생성하고, 1 이라는 값을 넣자
+
+INSERT INTO demo_t (something) values (1);
+
+7. table "demo_t" 확인
+
+\d
+
+8. table 결과 출력
+
+select * from demo_t ;
+
+9. \q 를 하면 "demo_db=#" 에서 "JINHOui-MacBookPro:~ jinholee$ " 로 빠져 나갈 수 있다
+
+
+
